@@ -1,120 +1,84 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import ViewLayer from './ViewLayer';
 import colors from './utils/colors';
 
-const DATA = {
-    20170421: {
+export default class Container extends Component {
+    state = {
         date: 'April 21st, 2017',
-        assets = {
+        assets: {
             citiChecking: {
-                title: Citi Checking,
+                name: 'Citi Checking',
                 amount: 1000,
             },
             citiSaving: {
-                title: Citi Saving,
+                name: 'Citi Saving',
                 amount: 100,
             },
             chaseChecking: {
-                title: Chase Checking,
+                name: 'Chase Checking',
                 amount: 1000,
             },
             chaseSaving: {
-                title: Chase Saving,
+                name: 'Chase Saving',
                 amount: 100,
             },
-        }
-        debts = {
+        },
+        debts: {
             discover: {
-                title: discover,
+                name: 'discover',
                 amount: 150,
             },
             chaseSaffire: {
-                title: Chase Saffire,
+                name: 'Chase Saffire',
                 amount: 75,
             },
         }
     }
-}
-
-
-export default class Container extends Component {
-    state = {
-        data: DATA
-    }
 
     get totalAssets() {
-        return reduce(this.state.data.assets);
+        const array = Object.keys(this.state.assets).map(key =>
+            this.state.assets[key].amount
+        );
+        return reduce(array);
     }
 
     get totalDebts() {
-        return reduce(this.state.data.debts);
+        const array = Object.keys(this.state.debts).map(key =>
+            this.state.debts[key].amount
+        );
+        return reduce(array);
+    }
+
+    addAsset = () => {
+        this.setState({
+            assets: {
+                ...this.state.assets,
+                '401k': {
+                    name: '401k',
+                    amount: 3000,
+                }
+            }
+        })
     }
 
     render() {
+        const { assets, debts } = this.state;
+
         return (
-            <View style={styles.container}>
-                {this.state.data.assets.map(asset => (
-                    <View key={asset.name} style={[styles.row, styles.green]}>
-                        <Text>{asset.name}</Text>
-                        <TextInput
-                            style={{height: 20, width: 100, borderWidth: 2, borderColor: "blue"}}
-                            placeholder={asset.amount.toString()}
-                            value={asset.amount.toString()}
-                            keyboardType="numeric"
-                        />
-                    </View>
-                ))}
-
-                <View style={[styles.row, styles.green]}>
-                    <Text>Total Assets</Text>
-                    <Text>{this.totalAssets}</Text>
-                </View>
-
-                {this.state.data.debts.map(debt => (
-                    <View key={debt.name} style={[styles.row, styles.red]}>
-                        <Text>{debt.name}</Text>
-                        <Text>{debt.amount}</Text>
-                    </View>
-                ))}
-
-                <View style={[styles.row, styles.red]}>
-                    <Text>Total Debts</Text>
-                    <Text>{this.totalDebts}</Text>
-                </View>
-
-                <View style={styles.row}>
-                    <Text>True Balance</Text>
-                    <Text>{this.totalAssets - this.totalDebts}</Text>
-                </View>
-            </View>
+            <ViewLayer
+                assets={assets}
+                totalAssets={this.totalAssets}
+                addAsset={this.addAsset}
+                debts={debts}
+                totalDebts={this.totalDebts}
+            />
         )
     }
 }
 
 function reduce(array) {
-    return array.reduce((acc, val) => acc += val.amount, 0)
+    return array.reduce((acc, val) => acc += val, 0)
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginTop: 40,
-        backgroundColor: '#fff',
-
-    },
-    row: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-    },
-    green: {
-        backgroundColor: colors.backgroundGreen
-    },
-    red: {
-        backgroundColor: colors.backgroundRed
-    }
-});
 
 // const DATA = {
 //     date: 'April 21st, 2017',
@@ -146,4 +110,38 @@ const styles = StyleSheet.create({
 //             amount: 75
 //         }
 //     ],
+// }
+
+// const DATA = {
+//     // 20170421: {
+//         date: 'April 21st, 2017',
+//         assets: {
+//             citiChecking: {
+//                 name: 'Citi Checking',
+//                 amount: 1000,
+//             },
+//             citiSaving: {
+//                 name: 'Citi Saving',
+//                 amount: 100,
+//             },
+//             chaseChecking: {
+//                 name: 'Chase Checking',
+//                 amount: 1000,
+//             },
+//             chaseSaving: {
+//                 name: 'Chase Saving',
+//                 amount: 100,
+//             },
+//         },
+//         debts: {
+//             discover: {
+//                 name: 'discover',
+//                 amount: 150,
+//             },
+//             chaseSaffire: {
+//                 name: 'Chase Saffire',
+//                 amount: 75,
+//             },
+//         }
+//     // }
 // }
